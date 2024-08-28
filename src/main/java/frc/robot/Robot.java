@@ -13,15 +13,19 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.generated.TunerConstants;
+
+import com.reduxrobotics.sensors.canandgyro.Canandgyro;
 
 public class Robot extends LoggedRobot{
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+  
+
 
   @Override
   public void robotInit() {
-
     Logger.recordMetadata("ProjectName", "MyProject"); // Set a metadata value
 
     switch (Constants.currentMode) {

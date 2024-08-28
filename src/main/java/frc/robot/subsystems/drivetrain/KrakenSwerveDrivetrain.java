@@ -2,11 +2,14 @@ package frc.robot.subsystems.drivetrain;
 
 import java.util.function.Supplier;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.reduxrobotics.sensors.canandgyro.Canandgyro;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -28,6 +31,9 @@ public class KrakenSwerveDrivetrain extends SwerveDrivetrain implements Subsyste
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
 
+    Canandgyro gyro = new Canandgyro(0);
+    double gyro_offset = 0;
+
     private double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
     private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
@@ -40,7 +46,7 @@ public class KrakenSwerveDrivetrain extends SwerveDrivetrain implements Subsyste
     private boolean hasAppliedOperatorPerspective = false;
 
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+      .withDeadband(MaxSpeed * 0.01).withRotationalDeadband(MaxAngularRate * 0.01) // Add a 10% deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
 
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
@@ -62,6 +68,7 @@ public class KrakenSwerveDrivetrain extends SwerveDrivetrain implements Subsyste
 
     public void resetHeading() {
         this.seedFieldRelative();
+        gyro_offset = gyro.getYaw();
     }
 
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
@@ -88,8 +95,8 @@ public class KrakenSwerveDrivetrain extends SwerveDrivetrain implements Subsyste
         setDefaultCommand( // Drivetrain will execute this command periodically
             applyRequest(() -> drive.withVelocityX(-driverController.getLeftY() * MaxSpeed) // Drive forward with
                                                                                             // negative Y (forward)
-                .withVelocityY(-driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                .withRotationalRate(driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                .withVelocityY(-driverController.getLeftX() * Math.abs(driverController.getLeftX()) * MaxSpeed) // Drive left with negative X (left)
+                .withRotationalRate(driverController.getRightX() * Math.abs(driverController.getRightX()) * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
     }
@@ -116,5 +123,8 @@ public class KrakenSwerveDrivetrain extends SwerveDrivetrain implements Subsyste
                 hasAppliedOperatorPerspective = true;
             });
         }
+        Logger.recordOutput("Robot/Drivetrain/PigeonYaw", TunerConstants.DriveTrain.getPigeon2().getYaw().getValueAsDouble());
+        Logger.recordOutput("Robot/Drivetrain/DTHeading", TunerConstants.DriveTrain.getState().Pose.getRotation().getDegrees());
+        Logger.recordOutput("Robot/Drivetrain/CanandYaw", (gyro.getYaw() - gyro_offset)*360.0);
     }
 }

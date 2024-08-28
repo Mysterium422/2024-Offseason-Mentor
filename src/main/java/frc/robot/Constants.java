@@ -33,7 +33,7 @@ public final class Constants {
     }
 
 	// if true kraken drivetrain is used otherwise neo is used
-	public static LoggedDashboardBoolean USE_KRAKEN_DRIVETRAIN = new LoggedDashboardBoolean("USE_KRAKEN_DRIVETRAIN", false);
+	public static LoggedDashboardBoolean USE_KRAKEN_DRIVETRAIN = new LoggedDashboardBoolean("USE_KRAKEN_DRIVETRAIN", true);
 
     public static final class ShooterConstants {
 		public static LoggedDashboardNumber INTAKING_ROLLER_VOLTAGE = new LoggedDashboardNumber("Shooter/Constants/INTAKING_ROLLER_VOLTAGE", 1.2);
