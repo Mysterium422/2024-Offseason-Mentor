@@ -17,14 +17,14 @@ import frc.robot.utils.ShooterUtils;
 
 public class Shooter extends SubsystemBase {
 
-    private FlywheelIO flywheelIO;
-    private PivotIO pivotIO;
-    private FeederIO feederIO;
-    private Limelight limelight;
+    private FlywheelIO m_flywheelIO;
+    private PivotIO m_pivotIO;
+    private FeederIO m_feederIO;
+    private Limelight m_limelight;
 
-    private FlywheelIOInputsAutoLogged flywheelIOInputs = new FlywheelIOInputsAutoLogged();
-    private PivotIOInputsAutoLogged pivotIOInputs = new PivotIOInputsAutoLogged();
-    private FeederIOInputsAutoLogged feederIOInputs = new FeederIOInputsAutoLogged();
+    private FlywheelIOInputsAutoLogged m_flywheelIOInputs = new FlywheelIOInputsAutoLogged();
+    private PivotIOInputsAutoLogged m_pivotIOInputs = new PivotIOInputsAutoLogged();
+    private FeederIOInputsAutoLogged m_feederIOInputs = new FeederIOInputsAutoLogged();
 
     // For tuning the shooter. Only takes effect if in TUNING state.
     private LoggedDashboardNumber flywheelLeftSpeed = new LoggedDashboardNumber("Shooter/Tuning/FlywheelLeftSpeed");
@@ -49,10 +49,10 @@ public class Shooter extends SubsystemBase {
     private ShooterState currentState = ShooterState.IDLE;
 
     public Shooter(FlywheelIO flywheelIO, PivotIO pivotIO, FeederIO feederIO, Limelight limelight) {
-        this.flywheelIO = flywheelIO;
-        this.pivotIO = pivotIO;
-        this.feederIO = feederIO;
-        this.limelight = limelight;
+        this.m_flywheelIO = flywheelIO;
+        this.m_pivotIO = pivotIO;
+        this.m_feederIO = feederIO;
+        this.m_limelight = limelight;
     }
 
     public void setState(ShooterState to) {
@@ -60,56 +60,56 @@ public class Shooter extends SubsystemBase {
     }
 
     public double getAngleFromDistance() {
-        return ShooterUtils.instance.getAngleFromDistance(limelight.getDistance());
+        return ShooterUtils.instance.getAngleFromDistance(m_limelight.getDistance());
     }
 
     @Override
     public void periodic() {
 
-        flywheelIO.updateInputs(flywheelIOInputs);
-        Logger.processInputs("Shooter/Flywheel", flywheelIOInputs);
+        m_flywheelIO.updateInputs(m_flywheelIOInputs);
+        Logger.processInputs("Shooter/Flywheel", m_flywheelIOInputs);
 
-        pivotIO.updateInputs(pivotIOInputs);
-        Logger.processInputs("Shooter/Pivot", pivotIOInputs);
+        m_pivotIO.updateInputs(m_pivotIOInputs);
+        Logger.processInputs("Shooter/Pivot", m_pivotIOInputs);
 
-        feederIO.updateInputs(feederIOInputs);
-        Logger.processInputs("Shooter/Feeder", feederIOInputs);
+        m_feederIO.updateInputs(m_feederIOInputs);
+        Logger.processInputs("Shooter/Feeder", m_feederIOInputs);
 
         Logger.recordOutput("Shooter/State", currentState.toString());
 
         switch (currentState) {
             case AMP:
-                flywheelIO.setSpeed(ShooterConstants.AMP_SPEED.get(), ShooterConstants.AMP_SPEED.get());
-                pivotIO.setAngle(ShooterConstants.AMP_ANGLE.get());
-                feederIO.setVoltage(ShooterConstants.AMP_ROLLER_VOLTAGE.get());
+                m_flywheelIO.setSpeed(ShooterConstants.AMP_SPEED.get(), ShooterConstants.AMP_SPEED.get());
+                m_pivotIO.setAngle(ShooterConstants.AMP_ANGLE.get());
+                m_feederIO.setVoltage(ShooterConstants.AMP_ROLLER_VOLTAGE.get());
                 break;
             case AMP_REVVING:
-                flywheelIO.setSpeed(ShooterConstants.AMP_SPEED.get(), ShooterConstants.AMP_SPEED.get());
-                pivotIO.setAngle(ShooterConstants.AMP_ANGLE.get());
-                feederIO.setVoltage(0);
+                m_flywheelIO.setSpeed(ShooterConstants.AMP_SPEED.get(), ShooterConstants.AMP_SPEED.get());
+                m_pivotIO.setAngle(ShooterConstants.AMP_ANGLE.get());
+                m_feederIO.setVoltage(0);
                 break;
             case SUBWOOFER:
-                flywheelIO.setSpeed(ShooterConstants.SPEAKER_SPEED.get() * 0.35, ShooterConstants.SPEAKER_SPEED.get());
-                pivotIO.setAngle(ShooterConstants.SPEAKER_ANGLE.get());
-                feederIO.setVoltage(ShooterConstants.SPEAKER_ROLLER_VOLTAGE.get());
+                m_flywheelIO.setSpeed(ShooterConstants.SPEAKER_SPEED.get() * 0.35, ShooterConstants.SPEAKER_SPEED.get());
+                m_pivotIO.setAngle(ShooterConstants.SPEAKER_ANGLE.get());
+                m_feederIO.setVoltage(ShooterConstants.SPEAKER_ROLLER_VOLTAGE.get());
                 break;
             case SUBWOOFER_REVVING:
-                flywheelIO.setSpeed(ShooterConstants.SPEAKER_SPEED.get() * 0.35, ShooterConstants.SPEAKER_SPEED.get());
-                feederIO.setVoltage(0);
-                pivotIO.setAngle(ShooterConstants.SPEAKER_ANGLE.get());
+                m_flywheelIO.setSpeed(ShooterConstants.SPEAKER_SPEED.get() * 0.35, ShooterConstants.SPEAKER_SPEED.get());
+                m_feederIO.setVoltage(0);
+                m_pivotIO.setAngle(ShooterConstants.SPEAKER_ANGLE.get());
                 break;
             case AUTO_AIM_REVVING:
-                flywheelIO.setSpeed(ShooterConstants.SPEAKER_SPEED.get() * 0.35, ShooterConstants.SPEAKER_SPEED.get());
-                feederIO.setVoltage(0);
-                pivotIO.setAngle(getAngleFromDistance());
+                m_flywheelIO.setSpeed(ShooterConstants.SPEAKER_SPEED.get() * 0.35, ShooterConstants.SPEAKER_SPEED.get());
+                m_feederIO.setVoltage(0);
+                m_pivotIO.setAngle(getAngleFromDistance());
                 break;
             case AUTO_AIM:
-                flywheelIO.setSpeed(ShooterConstants.SPEAKER_SPEED.get() * 0.35, ShooterConstants.SPEAKER_SPEED.get());
-                feederIO.setVoltage(ShooterConstants.SPEAKER_ROLLER_VOLTAGE.get());
-                pivotIO.setAngle(getAngleFromDistance());
+                m_flywheelIO.setSpeed(ShooterConstants.SPEAKER_SPEED.get() * 0.35, ShooterConstants.SPEAKER_SPEED.get());
+                m_feederIO.setVoltage(ShooterConstants.SPEAKER_ROLLER_VOLTAGE.get());
+                m_pivotIO.setAngle(getAngleFromDistance());
                 break;
             case INTAKING:
-                feederIO.setVoltage(ShooterConstants.INTAKING_ROLLER_VOLTAGE.get());
+                m_feederIO.setVoltage(ShooterConstants.INTAKING_ROLLER_VOLTAGE.get());
                 break;
             case PASSING:
                 // TODO
@@ -118,17 +118,17 @@ public class Shooter extends SubsystemBase {
                 // TODO
                 break;
             case TUNING:
-                flywheelIO.setSpeed(flywheelLeftSpeed.get(), flywheelRightSpeed.get());
-                pivotIO.setAngle(pivotAngle.get());
-                feederIO.setVoltage(rollerVoltage.get());
+                m_flywheelIO.setSpeed(flywheelLeftSpeed.get(), flywheelRightSpeed.get());
+                m_pivotIO.setAngle(pivotAngle.get());
+                m_feederIO.setVoltage(rollerVoltage.get());
                 break;
             case IDLE:
-                flywheelIO.setSpeed(0, 0);
-                feederIO.setVoltage(0);
+                m_flywheelIO.setSpeed(0, 0);
+                m_feederIO.setVoltage(0);
                 break;
             default:
                 break;
         }
-        flywheelIO.updatePIDControllers();
+        m_flywheelIO.updatePIDControllers();
     }
 }

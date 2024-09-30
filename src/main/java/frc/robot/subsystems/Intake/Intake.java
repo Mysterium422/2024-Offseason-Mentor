@@ -7,8 +7,8 @@ import frc.robot.subsystems.Intake.Roller.RollerIOInputsAutoLogged;
 
 public class Intake extends SubsystemBase{
 
-    private RollerIO rollerIO;
-    private RollerIOInputsAutoLogged rollerIOInputs = new RollerIOInputsAutoLogged();
+    private RollerIO m_rollerIO;
+    private RollerIOInputsAutoLogged m_rollerIOInputs = new RollerIOInputsAutoLogged();
 
     public enum IntakeState {
         INTAKING,
@@ -18,39 +18,39 @@ public class Intake extends SubsystemBase{
         SHOOTING
     }
 
-    private IntakeState currentSetState = IntakeState.IDLE;
+    private IntakeState currentState = IntakeState.IDLE;
 
     public Intake(RollerIO rollerIO) {
-        this.rollerIO = rollerIO;
+        this.m_rollerIO = rollerIO;
     }
 
-    public void setState(IntakeState to) {
-        currentSetState = to;
+    public void setState(IntakeState newState) {
+        currentState = newState;
     }
  
     @Override
     public void periodic() {
 
-        rollerIO.updateInputs(rollerIOInputs);
-        Logger.processInputs("Intake/Roller", rollerIOInputs);
+        m_rollerIO.updateInputs(m_rollerIOInputs);
+        Logger.processInputs("Intake/Roller",m_rollerIOInputs);
 
-        Logger.recordOutput("Intake/State", currentSetState.toString());
+        Logger.recordOutput("Intake/State", currentState.toString());
 
-        switch (currentSetState) {
+        switch (currentState) {
             case INTAKING:
-                rollerIO.setSpeed(1);
+                m_rollerIO.setSpeed(1);
                 break;
             case SHOOTING:
-                rollerIO.setSpeed(1);
+                m_rollerIO.setSpeed(1);
                 break;
             case VOMITING:
-                rollerIO.setSpeed(-1);
+                m_rollerIO.setSpeed(-1);
                 break;
             case TUNING:
                 // TODO
                 break;
             case IDLE:
-                rollerIO.setSpeed(0);
+                m_rollerIO.setSpeed(0);
                 break;
             default:
                 break;

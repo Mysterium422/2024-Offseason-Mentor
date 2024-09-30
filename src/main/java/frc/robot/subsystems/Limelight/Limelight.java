@@ -8,25 +8,25 @@ import frc.robot.subsystems.Limelight.LimelightIO.LimelightIO;
 import frc.robot.utils.ShooterUtils;
 
 public class Limelight extends SubsystemBase{
-   private LimelightIO limelightIO;
-   private LimelightIOInputsAutoLogged limelightIOInputs = new LimelightIOInputsAutoLogged();
+   private LimelightIO m_limelightIO;
+   private LimelightIOInputsAutoLogged m_limelightIOInputs = new LimelightIOInputsAutoLogged();
 
    public Limelight(LimelightIO limelightIO) {
-        this.limelightIO = limelightIO;
+        this.m_limelightIO = limelightIO;
    }
 
    public double getAngleOffset() {
-        return limelightIO.getAngleOffset();
+        return m_limelightIO.getAngleOffset();
    }
 
    public double getDistance() {
-        return limelightIO.getDistance();
+        return m_limelightIO.getDistance();
    }
 
    @Override
    public void periodic() {
-       limelightIO.updateInputs(limelightIOInputs);
-       Logger.processInputs("Limelight", limelightIOInputs);
+       m_limelightIO.updateInputs(m_limelightIOInputs);
+       Logger.processInputs("Limelight", m_limelightIOInputs);
    }
    
 }

@@ -30,7 +30,7 @@ public class BeamBreak extends SubsystemBase{
         COUNTING
     }
 
-    public BEAM_BREAK(BeamBreakIO beamBreakIO, RobotState robotState, int driverPort, int operatorPort) {
+    public BeamBreak(BeamBreakIO beamBreakIO, RobotState robotState, int driverPort, int operatorPort) {
         this.m_beamBreakIO = beamBreakIO;
         this.m_robotState = robotState;
         this.m_driver = new XboxController(driverPort);
@@ -40,7 +40,7 @@ public class BeamBreak extends SubsystemBase{
     @Override
     public void periodic() {
 
-        if (beamBreakIO.getIsBroken()) {
+        if (m_beamBreakIO.getIsBroken()) {
             if (beamBreakBrokenTime == 0) {
                 m_driver.setRumble(RumbleType.kBothRumble, 1);
                 m_operator.setRumble(RumbleType.kBothRumble, 1);
@@ -57,10 +57,10 @@ public class BeamBreak extends SubsystemBase{
             beamBreakBrokenTime = 0;
         }
 
-        Logger.recordOutput("BeamBreak/State", currentState.toString());
+        Logger.recordOutput("BeamBreak/State", m_currentState.toString());
         Logger.recordOutput("BeamBreak/Counter", beamBreakBrokenTime);
 
-        beamBreakIO.updateInputs(beamBreakIOInputs);
-        Logger.processInputs("BeamBreak/Inputs", beamBreakIOInputs);
+        m_beamBreakIO.updateInputs(m_beamBreakIOInputs);
+        Logger.processInputs("BeamBreak/Inputs", m_beamBreakIOInputs);
     }
 }

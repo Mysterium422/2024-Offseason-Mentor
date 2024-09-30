@@ -50,15 +50,15 @@ import frc.robot.subsystems.drivetrain.NeoSwerveDrive.NeoSwerveDrivetrain;
 
 public class RobotContainer {
 
-  private Climber climber;
-  private Shooter shooter;
-  private Intake intake;
-  private BeamBreak beamBreak;
-  private Limelight limelight;
+  private Climber m_climber;
+  private Shooter m_shooter;
+  private Intake m_intake;
+  private BeamBreak m_beamBreak;
+  private Limelight m_limelight;
 
-  private NeoSwerveDrivetrain drivetrain;
+  private NeoSwerveDrivetrain m_drivetrain;
 
-  private RobotState robotState;
+  private RobotState m_robotState;
 
   private final CommandXboxController driver = new CommandXboxController(Ports.driverControllerPort);
   private final CommandXboxController operator = new CommandXboxController(Ports.operatorControllerPort);
@@ -73,14 +73,14 @@ public class RobotContainer {
 
   private void configureBindings() {
 
-    drivetrain.configureDefaultCommand(driver);
+    m_drivetrain.configureDefaultCommand(driver);
 
-    driver.a().onTrue(new InstantCommand(() -> drivetrain.resetHeading()));
-    driver.x().whileTrue(new RunCommand(() -> drivetrain.setX(), drivetrain));
+    driver.a().onTrue(new InstantCommand(() -> m_drivetrain.resetHeading()));
+    driver.x().whileTrue(new RunCommand(() -> m_drivetrain.setX(), m_drivetrain));
 
-    driver.leftTrigger().whileTrue(new StartEndCommand(() -> drivetrain.setBoost(true), () -> drivetrain.setBoost(false)));
+    driver.leftTrigger().whileTrue(new StartEndCommand(() -> m_drivetrain.setBoost(true), () -> m_drivetrain.setBoost(false)));
 
-		operator.rightBumper().whileTrue(new StartEndCommand(() -> robotState.setState(State.INTAKING), () -> {
+		operator.rightBumper().whileTrue(new StartEndCommand(() -> m_robotState.setState(State.INTAKING), () -> {
       if (robotState.currentState != State.NOTE_HELD) {
         robotState.setState(State.IDLE);
       }
