@@ -13,16 +13,16 @@ import frc.robot.subsystems.BeamBreak.BeamBreakIO.BeamBreakIO;
 import frc.robot.subsystems.BeamBreak.BeamBreakIO.BeamBreakIOInputsAutoLogged;
 
 public class BeamBreak extends SubsystemBase{
-    private RobotState robotState;
+    private RobotState m_robotState;
 
-    private BeamBreakIO beamBreakIO;
-    private BeamBreakIOInputsAutoLogged beamBreakIOInputs = new BeamBreakIOInputsAutoLogged();
+    private BeamBreakIO m_beamBreakIO;
+    private BeamBreakIOInputsAutoLogged m_beamBreakIOInputs = new BeamBreakIOInputsAutoLogged();
 
-    private XboxController driver;
-    private XboxController operator;
+    private XboxController m_driver;
+    private XboxController m_operator;
 
     private int beamBreakBrokenTime;
-    private BeamBreakState currentState = BeamBreakState.IDLE;
+    private BeamBreakState m_currentState = BeamBreakState.IDLE;
 
     public enum BeamBreakState {
         IDLE,
@@ -30,11 +30,11 @@ public class BeamBreak extends SubsystemBase{
         COUNTING
     }
 
-    public BeamBreak(BeamBreakIO beamBreakIO, RobotState robotState, int driverPort, int operatorPort) {
-        this.beamBreakIO = beamBreakIO;
-        this.robotState = robotState;
-        this.driver = new XboxController(driverPort);
-        this.operator = new XboxController(operatorPort);
+    public BEAM_BREAK(BeamBreakIO beamBreakIO, RobotState robotState, int driverPort, int operatorPort) {
+        this.m_beamBreakIO = beamBreakIO;
+        this.m_robotState = robotState;
+        this.m_driver = new XboxController(driverPort);
+        this.m_operator = new XboxController(operatorPort);
     }
 
     @Override
@@ -42,15 +42,15 @@ public class BeamBreak extends SubsystemBase{
 
         if (beamBreakIO.getIsBroken()) {
             if (beamBreakBrokenTime == 0) {
-                driver.setRumble(RumbleType.kBothRumble, 1);
-                operator.setRumble(RumbleType.kBothRumble, 1);
+                m_driver.setRumble(RumbleType.kBothRumble, 1);
+                m_operator.setRumble(RumbleType.kBothRumble, 1);
             }
             if (beamBreakBrokenTime == IntakeConstants.BEAMBREAK_DELAY.get()) {
-                robotState.currentState = State.NOTE_HELD;
+                m_robotState.currentState = State.NOTE_HELD;
             }
             if (beamBreakBrokenTime == IntakeConstants.CONTROLLER_RUMBLE_TIME.get()) {
-                driver.setRumble(RumbleType.kBothRumble, 0);
-                operator.setRumble(RumbleType.kBothRumble, 0);
+                m_driver.setRumble(RumbleType.kBothRumble, 0);
+                m_operator.setRumble(RumbleType.kBothRumble, 0);
             }
             beamBreakBrokenTime++;
         } else {
