@@ -108,7 +108,7 @@ public class KrakenSwerveDrivetrain extends SwerveDrivetrain implements Subsyste
         point.withModuleDirection(Rotation2d.fromDegrees(-45)).apply(m_requestParameters, Modules[2]);
         point.withModuleDirection(Rotation2d.fromDegrees(45)).apply(m_requestParameters, Modules[3]);
     }
-
+    
     @Override
     public void periodic() {
         /* Periodically try to apply the operator perspective */
