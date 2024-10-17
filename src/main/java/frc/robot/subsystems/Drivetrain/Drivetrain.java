@@ -38,6 +38,7 @@ public class Drivetrain extends SubsystemBase {
   private ChassisSpeeds pathplannerChassisSpeeds; // Robot Relative
 
   private PIDController autoAimPID = new PIDController(0.02, 0, 0.001);
+  private PIDController gyroAutoAimPID = new PIDController(0.035, 0, 0);
 
   private boolean speedBoost;
 
@@ -46,6 +47,12 @@ public class Drivetrain extends SubsystemBase {
     m_limelight = limelight;
 
     autoAimPID.setSetpoint(0);
+    gyroAutoAimPID.enableContinuousInput(0, 360);
+    if (Alliance.Red.equals(DriverStation.getAlliance().get())) {
+      gyroAutoAimPID.setSetpoint(180);
+    } else {
+      gyroAutoAimPID.setSetpoint(0);
+    }
   }
 
   @Override
@@ -57,24 +64,22 @@ public class Drivetrain extends SubsystemBase {
 
     switch (state) {
       case SPEAKER_AUTO_ALIGN:
-        if (m_limelight.isValidTarget(Tags.SPEAKER_CENTER.getId())) {
-          double desiredOmega = autoAimPID.calculate(m_limelight.getTx());
-
-          // if (DriverStation.getAlliance().get() == Alliance.Blue) {
-          //   desiredOmega *= -1;
-          // }
-
-          m_swerveDrivetrainIO.drive(
-              driverChassisSpeeds.vxMetersPerSecond,
-              driverChassisSpeeds.vyMetersPerSecond,
-              desiredOmega,
-              false,
-              false,
-              speedBoost);
-          break;
+        double desiredOmega;
+        if (m_limelight.isValidTarget(Tags.SPEAKER_CENTER.getId()) || m_limelight.isValidTarget(Tags.SPEAKER_OFFSET.getId())) {
+          desiredOmega = autoAimPID.calculate(m_limelight.getTx());
+        } else {
+          desiredOmega = gyroAutoAimPID.calculate(m_swerveDrivetrainIO.getPigeonYaw());
         }
 
-        // Intentional Fall-through - if Limelight does not detect target, we do manual driving
+        m_swerveDrivetrainIO.drive(
+          driverChassisSpeeds.vxMetersPerSecond,
+          driverChassisSpeeds.vyMetersPerSecond,
+          desiredOmega,
+          false,
+          false,
+        speedBoost);
+
+        break;
       case TUNING:
       case MANUAL:
         m_swerveDrivetrainIO.drive(driverChassisSpeeds, false, speedBoost);
