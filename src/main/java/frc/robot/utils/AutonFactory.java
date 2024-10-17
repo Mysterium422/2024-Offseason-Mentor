@@ -57,6 +57,9 @@ public class AutonFactory extends VirtualSubsystem {
     m_autonChooser = new LoggedDashboardChooser<>("Auton Chooser");
     m_autonChooser.addOption("Do Nothing", "Do Nothing");
     m_autonChooser.addOption("Shoot Preload", "Shoot Preload");
+
+    registerNamedCommands();
+
     List<String> paths = PathPlannerUtil.getExistingPaths();
     for (String path : paths) {
       m_autonChooser.addOption(path, path);
