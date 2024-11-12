@@ -1,8 +1,8 @@
 package frc.robot;
 
-import frc.robot.subsystems.BeamBreak.BeamBreak;
 import org.littletonrobotics.junction.Logger;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.sensors.BeamBreak.BeamBreak;
 import frc.robot.subsystems.Climber.Climber;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 import frc.robot.subsystems.Drivetrain.Drivetrain.DriveState;

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.BeamBreak.BeamBreakIO;
+package frc.robot.sensors.BeamBreak.BeamBreakIO;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 
@@ -15,6 +15,6 @@ public class BeamBreakIODIO implements BeamBreakIO {
   }
 
   public void updateInputs(BeamBreakIOInputs inputs) {
-    inputs.isBroken = beamBreakDigitalInput.get();
+    inputs.isBroken = getIsBroken();
   }
 }

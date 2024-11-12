@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.lib.littletonrobotics.VirtualSubsystem;
 import frc.robot.Robot;
 import frc.robot.RobotState;
 import frc.robot.RobotState.State;

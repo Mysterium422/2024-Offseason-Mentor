@@ -1,7 +1,7 @@
 package frc.robot.subsystems.Intake;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.BeamBreak.BeamBreak;
+import frc.robot.sensors.BeamBreak.BeamBreak;
 import frc.robot.subsystems.Intake.Roller.RollerIO;
 import frc.robot.subsystems.Intake.Roller.RollerIOInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;

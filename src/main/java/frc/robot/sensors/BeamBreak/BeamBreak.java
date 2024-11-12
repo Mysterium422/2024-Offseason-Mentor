@@ -1,13 +1,15 @@
-package frc.robot.subsystems.BeamBreak;
+package frc.robot.sensors.BeamBreak;
+
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.BeamBreak.BeamBreakIO.BeamBreakIO;
-import frc.robot.subsystems.BeamBreak.BeamBreakIO.BeamBreakIOInputsAutoLogged;
+import frc.lib.littletonrobotics.VirtualSubsystem;
+import frc.robot.sensors.BeamBreak.BeamBreakIO.BeamBreakIO;
+import frc.robot.sensors.BeamBreak.BeamBreakIO.BeamBreakIOInputsAutoLogged;
 
-public class BeamBreak extends SubsystemBase {
+public class BeamBreak extends VirtualSubsystem {
   private BeamBreakIO beamBreakIO;
-  private BeamBreakIOInputsAutoLogged beamBreakIOInputs = new BeamBreakIOInputsAutoLogged();
+  private BeamBreakIOInputsAutoLogged inputs = new BeamBreakIOInputsAutoLogged();
   private double initialBreakTimestamp;
   private boolean brokenLastCycle;
 
@@ -16,7 +18,7 @@ public class BeamBreak extends SubsystemBase {
   }
 
   public boolean isBroken() {
-    return beamBreakIO.getIsBroken() && brokenLastCycle;
+    return inputs.isBroken && brokenLastCycle;
   }
 
   public double getBrokenTime() {
@@ -29,13 +31,16 @@ public class BeamBreak extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (beamBreakIO.getIsBroken() && !brokenLastCycle) {
+    beamBreakIO.updateInputs(inputs);
+
+    if (inputs.isBroken && !brokenLastCycle) {
       initialBreakTimestamp = Timer.getFPGATimestamp();
       brokenLastCycle = true;
     } else if (!beamBreakIO.getIsBroken()) {
       brokenLastCycle = false;
     }
     
-    beamBreakIO.updateInputs(beamBreakIOInputs);
+    Logger.recordOutput("BrokenTwice", isBroken());
+    Logger.recordOutput("BrokenTime", getBrokenTime());
   }
 }
